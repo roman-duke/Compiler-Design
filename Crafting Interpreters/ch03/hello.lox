@@ -1,0 +1,38 @@
+// Functions are first-class citizens in the Lox language
+// because they can be passed around, referenced to and stored in variables
+
+// Now look at the following below to illustrate the concept of closures.
+fun returnFunction() {
+  var outside = "outside";
+
+  fun inner() {
+    print outside;
+  }
+
+  return inner;
+}
+
+var fn = returnFunction();
+fn();
+
+
+// How to make classes in the Lox programming language?
+class Breakfast {
+  cook() {
+    print "Eggs a-fryin'!";
+  }
+
+  serve(who) {
+    print "Enjoy your breakfast, " + who + ".";
+  }
+}
+
+
+// Let's test if currying works in Lox
+fun curry(x) {
+  return (fun (y) {
+    return x * y;
+  });
+}
+
+print curry(3)(4);
