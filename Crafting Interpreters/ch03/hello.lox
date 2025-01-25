@@ -29,10 +29,13 @@ class Breakfast {
 
 
 // Let's test if currying works in Lox
-fun curry(x) {
-  return (fun (y) {
-    return x * y;
-  });
-}
+// fun curry(x) {
+//  return (fun (y) {
+//    return x * y;
+//  });
+// }
 
-print curry(3)(4);
+// print curry(3)(4);
+
+var spam = "Hello World!";
+print spam;
