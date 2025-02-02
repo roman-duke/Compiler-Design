@@ -20,3 +20,13 @@ Also, [read this](https://stackoverflow.com/questions/14954721/what-is-the-diffe
 
 ## Token types
 A parser could categorize tokens from the raw lexemes by comparing the srtrings, but it's not the most efficient data structure. We could use a data structure where upon encountering a lexeme, we remember what kind of lexeme it represents.
+
+
+## Scanner
+The core of the scanner is a loop. Now the follow up question is, what if this were being done in a functional programming language where there are no loops, would it still be easy to do with recursion? Starting at the first character of the source code, the scanner identifies a lexeme and then after consuming it, emits a token. It repeats the process for the next character in the source code.
+The rules that determines how a language groups characters into lexemes are called its **lexical grammar**. In most programming languages, the rules of that grammar are simple enough for the language to be classified as a [**regular language**](https://en.wikipedia.org/wiki/Regular_language).
+
+
+- ### Reserved Words and Identifiers
+The principle of maximal munch states that when two lexical grammar rules can both match a chunk of code that the scanner is looking at, _whichever one matches the most character wins_.
+For example, if we can both match "anderlecht" as an identifier and "and" as a keyword, then the former wins. In essence, you can't easily detect a reserved word until you've reached the end of what might instead be an identifier.
