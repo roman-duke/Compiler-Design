@@ -99,7 +99,7 @@ public class Scanner {
           // Support for C-style block comments
           // These comments include new lines and are
           // terminated when the closing pattern is matched
-          while (peek() != '*' && !isAtEnd()) {
+          while ((peek() != '*' || peek() == '*' && peekNext() != '/') && !isAtEnd()) {
             if (peek() == '\n')
               line++;
             advance();
