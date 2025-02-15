@@ -13,22 +13,22 @@ public class Scanner {
 
   static {
     keywords = new HashMap<>();
-    keywords.put("and",    TokenType.AND);
-    keywords.put("class",  TokenType.CLASS);
-    keywords.put("else",   TokenType.ELSE);
-    keywords.put("false",  TokenType.FALSE);
-    keywords.put("for",    TokenType.FOR);
-    keywords.put("fun",    TokenType.FUN);
-    keywords.put("if",     TokenType.IF);
-    keywords.put("nil",    TokenType.NIL);
-    keywords.put("or",     TokenType.OR);
-    keywords.put("print",  TokenType.PRINT);
+    keywords.put("and", TokenType.AND);
+    keywords.put("class", TokenType.CLASS);
+    keywords.put("else", TokenType.ELSE);
+    keywords.put("false", TokenType.FALSE);
+    keywords.put("for", TokenType.FOR);
+    keywords.put("fun", TokenType.FUN);
+    keywords.put("if", TokenType.IF);
+    keywords.put("nil", TokenType.NIL);
+    keywords.put("or", TokenType.OR);
+    keywords.put("print", TokenType.PRINT);
     keywords.put("return", TokenType.RETURN);
-    keywords.put("super",  TokenType.SUPER);
-    keywords.put("this",   TokenType.THIS);
-    keywords.put("true",   TokenType.TRUE);
-    keywords.put("var",    TokenType.VAR);
-    keywords.put("while",  TokenType.WHILE);
+    keywords.put("super", TokenType.SUPER);
+    keywords.put("this", TokenType.THIS);
+    keywords.put("true", TokenType.TRUE);
+    keywords.put("var", TokenType.VAR);
+    keywords.put("while", TokenType.WHILE);
   }
 
   Scanner(String source) {
@@ -95,6 +95,25 @@ public class Scanner {
           // A comment goes until the end of the line.
           while (peek() != '\n' && !isAtEnd())
             advance();
+        } else if (match('*')) {
+          // Support for C-style block comments
+          // These comments include new lines and are
+          // terminated when the closing pattern is matched
+          while (peek() != '*' && !isAtEnd()) {
+            if (peek() == '\n')
+              line++;
+            advance();
+          }
+
+          if (peek() == '*') {
+            if (peekNext() == '/') {
+              // Advance two places if end of block quote has been reached
+              current+=2;
+            } else if (peekNext() != '/') {
+              Lox.error(line, "Unterminated block comment.");
+              return;
+            }
+          }
         } else {
           addToken(TokenType.SLASH);
         }
@@ -126,11 +145,13 @@ public class Scanner {
   }
 
   private void identifier() {
-    while (isAlphaNumeric(peek())) advance();
+    while (isAlphaNumeric(peek()))
+      advance();
 
     String text = source.substring(start, current);
     TokenType type = keywords.get(text);
-    if (type == null) type =  TokenType.IDENTIFIER;
+    if (type == null)
+      type = TokenType.IDENTIFIER;
     addToken(type);
   }
 
@@ -151,6 +172,9 @@ public class Scanner {
   }
 
   private void string() {
+    // The isAtEnd() bit is important because the closing '"' can't end the source
+    // code
+    // remember that the closing semi-colon is required in the lox language
     while (peek() != '"' && !isAtEnd()) {
       if (peek() == '\n')
         line++;
@@ -171,9 +195,8 @@ public class Scanner {
   }
 
   private boolean match(char expected) {
-    if (isAtEnd())
-      return false;
-    if (source.charAt(current) != expected)
+    // if at the end of the source code or no match
+    if (isAtEnd() || source.charAt(current) != expected)
       return false;
 
     current++;
@@ -187,7 +210,8 @@ public class Scanner {
   }
 
   private char peekNext() {
-    if (current + 1 >= source.length()) return '\0';
+    if (current + 1 >= source.length())
+      return '\0';
     return source.charAt(current + 1);
   }
 
@@ -197,8 +221,8 @@ public class Scanner {
 
   private boolean isAlpha(char c) {
     return (c >= 'a' && c <= 'z') ||
-          (c >= 'A' && c <= 'Z') ||
-          c == '_';
+        (c >= 'A' && c <= 'Z') ||
+        c == '_';
   }
 
   private boolean isAlphaNumeric(char c) {
