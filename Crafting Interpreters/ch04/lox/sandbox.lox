@@ -1,0 +1,30 @@
+// This file is going to be a test file to essentially write Lox source code
+// and see how the compiler is fairing so far
+
+// TEST TO SEE IF C-STYLE BLOCK COMMENT WORKS
+/* Ore no nawa, Eren Jaeger has come
+and he actually has no idea that he is the wielder of the Attack Titan
+He is going to realize soon enough
+
+Hahaha
+*/
+
+// NOW TEST TO SEE IF UNCLOSED C-STYLE BLOCK COMMENT WORKS
+/* This right here
+is an
+unclosed
+c-style block comment
+
+Let's see if the compiler can catch us, hahaha
+*/
+
+
+// TEST IF NESTED C-STYLE BLOCK COMMENTS WORKS
+/* My name is Eren Jaeger and
+  insert some plain text in between to see if it can
+  cleanly parse it. Nice, it did!
+  /* this right here are a bunch of nested comments
+    /* Let's see how smart our interpreter is getting */
+  */
+  insert more at the bottom to confirm. Nice, nice
+*/

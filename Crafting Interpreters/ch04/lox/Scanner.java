@@ -99,20 +99,37 @@ public class Scanner {
           // Support for C-style block comments
           // These comments include new lines and are
           // terminated when the closing pattern is matched
-          while ((peek() != '*' || peek() == '*' && peekNext() != '/') && !isAtEnd()) {
+          int nestedBlockCommentCount = 0;
+          while ((peek() != '*' || peek() == '*' && peekNext() != '/' || nestedBlockCommentCount != 0)
+              && !isAtEnd()) {
             if (peek() == '\n')
               line++;
+
+            else if (peek() == '/' && peekNext() == '*') {
+              nestedBlockCommentCount++;
+              advance();
+            }
+
+            else if (peek() == '*' && peekNext() == '/') {
+              nestedBlockCommentCount--;
+              advance();
+            }
+
             advance();
           }
 
-          if (peek() == '*') {
+          while (peek() == '*') {
             if (peekNext() == '/') {
               // Advance two places if end of block quote has been reached
-              current+=2;
+              current += 2;
             } else if (peekNext() != '/') {
               Lox.error(line, "Unterminated block comment.");
-              return;
             }
+          }
+
+          // If it gets to the end of the source code without finding a closing comment
+          if (isAtEnd()) {
+            Lox.error(line, "Unterminated block comment.");
           }
         } else {
           addToken(TokenType.SLASH);
